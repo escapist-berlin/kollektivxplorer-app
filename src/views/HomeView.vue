@@ -1,12 +1,24 @@
 <template>
   <div>
     <h1>Welcome to KollektivXplorer</h1>
-    <p>Explore releases</p>
 
-    <v-container>
-      <v-data-table-virtual
+    <v-card flat>
+      <template v-slot:text>
+        <v-text-field
+            v-model="search"
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            hide-details
+            single-line
+        ></v-text-field>
+      </template>
+
+      <v-data-table
+          :custom-filter="filterByFields"
           :headers="headers"
           :items="KollektivXReleases"
+          :search="search"
           height="750"
           width="auto"
           item-value="name"
@@ -82,9 +94,8 @@
             {{ item.styles.join(', ') }}
           </span>
         </template>
-
-      </v-data-table-virtual>
-    </v-container>
+      </v-data-table>
+    </v-card>
   </div>
 </template>
 
@@ -92,6 +103,7 @@
 import { ref } from 'vue'
 import KollektivXReleases from '/src/assets/KollektivXData.json';
 
+const search = ref('');
 const headers = ref([
   { title: 'Cover', key: 'image', sortable: false },
   { title: 'Artists', key: 'artists' },
@@ -104,4 +116,22 @@ const headers = ref([
   { title: 'Styles', key: 'styles' },
   { title: 'Actions', key: 'actions', sortable: false },
 ]);
+
+function filterByFields(value, query, item) {
+  if (!query) return true;
+  const normalizedQuery = query.toLowerCase();
+
+  if (typeof value === 'string') {
+    return value.toLowerCase().includes(normalizedQuery);
+  }
+
+  if (Array.isArray(value)) {
+    return value.some((val) =>
+        typeof val === 'string' && val.toLowerCase().includes(normalizedQuery) ||
+        typeof val === 'object' && val.name && val.name.toLowerCase().includes(normalizedQuery)
+    );
+  }
+
+  return false;
+}
 </script>
