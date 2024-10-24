@@ -108,18 +108,33 @@
           </v-data-table>
         </v-col>
 
-        <v-col cols="4">
+        <v-col cols="4" class="pt-2">
           <v-card flat>
             <!-- Navigation Buttons -->
-            <v-row justify="space-between" class="mb-3">
-              <v-col>
-                <v-btn @click="prevRelease">Back</v-btn>
-                <v-btn @click="nextRelease">Forth</v-btn>
+            <v-row>
+              <v-col cols="6" class="d-flex">
+                <v-btn
+                    @click="prevRelease"
+                    class="ml-2 align-self-start">
+                  <v-icon>
+                    mdi-arrow-left
+                  </v-icon>
+                </v-btn>
+                <v-btn
+                    @click="nextRelease"
+                    class="ml-2 align-self-start">
+                  <v-icon>
+                    mdi-arrow-right
+                  </v-icon>
+                </v-btn>
               </v-col>
 
-              <v-col class="text-right">
-                <v-btn @click="showAllReleases">Show All Releases</v-btn>
+              <v-col cols="6" class="d-flex">
+                <v-chip class="align-self-end">
+                  {{ playerReleases.length }} Releases in Player
+                </v-chip>
               </v-col>
+              <v-divider />
             </v-row>
 
             <!-- Release Info Section -->
