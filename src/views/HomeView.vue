@@ -147,18 +147,19 @@
               </v-col>
             </v-row>
 
-<!--            &lt;!&ndash; Playlist Section &ndash;&gt;-->
-<!--            <v-row class="mt-4">-->
-<!--              <v-col>-->
-<!--                <v-list>-->
-<!--                  <v-list-item v-for="(track, index) in currentRelease.youtubeTracks" :key="index" @click="playVideo(track.url)">-->
-<!--                    <v-list-item-content>-->
-<!--                      {{ track.title }}-->
-<!--                    </v-list-item-content>-->
-<!--                  </v-list-item>-->
-<!--                </v-list>-->
-<!--              </v-col>-->
-<!--            </v-row>-->
+            <!-- Playlist Section -->
+            <v-row class="mt-4">
+              <v-col>
+                <v-list>
+                  <v-list-item
+                      v-for="(track, index) in currentRelease.videos"
+                      :key="index"
+                      @click="playVideo(track.url)">
+                      {{ track.title }}
+                  </v-list-item>
+                </v-list>
+              </v-col>
+            </v-row>
 
 <!--            &lt;!&ndash; YouTube Player at the bottom &ndash;&gt;-->
 <!--            <v-row class="mt-4">-->
