@@ -35,9 +35,13 @@
             </template>
 
             <template v-slot:item.actions="{ item }">
-                <v-btn icon @click="addToPlayer(item)">
+                <v-btn
+                    variant="text"
+                    icon
+                    @click="addToPlayer(item)">
                   <v-icon
-                      color="primary">
+                      color="primary"
+                      size="small">
                     mdi-play-circle
                   </v-icon>
                 </v-btn>
@@ -114,6 +118,9 @@
             <v-row>
               <v-col cols="6" class="d-flex">
                 <v-btn
+                    variant="text"
+                    icon
+                    size="small"
                     @click="prevRelease"
                     class="ml-2 align-self-start">
                   <v-icon>
@@ -121,6 +128,9 @@
                   </v-icon>
                 </v-btn>
                 <v-btn
+                    variant="text"
+                    icon
+                    size="small"
                     @click="nextRelease"
                     class="ml-2 align-self-start">
                   <v-icon>
@@ -130,8 +140,10 @@
               </v-col>
 
               <v-col cols="6" class="d-flex">
-                <v-chip class="align-self-end">
-                  {{ playerReleases.length }} Releases in Player
+                <v-chip
+                    size="small"
+                    class="align-self-end">
+                    {{ playerReleases.length }} Releases in Player
                 </v-chip>
               </v-col>
               <v-divider />
@@ -146,11 +158,26 @@
                     max-width="60">
                 </v-img>
               </v-col>
-              <v-col cols="10" class="d-flex flex-column">
+              <v-col cols="8" class="d-flex flex-column">
                 <span class="align-self-start">{{ currentRelease?.artists?.map(artist => artist.name)?.join(', ') }}</span>
                 <strong class="align-self-start">
                   <span >{{ currentRelease?.title }}</span>
                 </strong>
+              </v-col>
+
+              <!-- Remove Button -->
+              <v-col cols="2" class="d-flex justify-end">
+                <v-btn
+                    variant="text"
+                    icon
+                    size="small"
+                    @click="removeCurrentRelease">
+                    <v-icon
+                        color="red"
+                        size="small">
+                      mdi-close
+                    </v-icon>
+                </v-btn>
               </v-col>
 
               <v-col class="d-flex flex-column pt-0">
@@ -289,6 +316,22 @@ const isCurrentVideo = (trackUri) => {
   const trackId = trackUri.split('v=')[1];
   return trackId === currentVideoId.value;
 };
+
+// Function to remove the current release from the player
+function removeCurrentRelease() {
+  if (playerReleases.value.length > 0) {
+    playerReleases.value.splice(currentReleaseIndex.value, 1);
+
+    // Adjust the current release after removal
+    if (playerReleases.value.length > 0) {
+      currentReleaseIndex.value = Math.min(currentReleaseIndex.value, playerReleases.value.length - 1);
+      currentRelease.value = playerReleases.value[currentReleaseIndex.value];
+    } else {
+      currentRelease.value = {};
+      currentVideoUrl.value = null;
+    }
+  }
+}
 </script>
 
 <style scoped>
