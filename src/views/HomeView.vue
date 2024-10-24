@@ -232,6 +232,7 @@ function addToPlayer(item) {
 
     if (Object.keys(currentRelease.value).length === 0) {
       currentRelease.value = playerReleases.value[0];
+      this.playVideo(currentRelease.value?.videos[0]?.uri);
     }
   }
 }
