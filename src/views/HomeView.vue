@@ -24,88 +24,88 @@
             height="750"
             width="auto"
             item-value="name"
-        >
-          <template v-slot:item.image="{ item }">
-            <a
-                :href="item.uri"
-                target="_blank"
-            >
-              <img :src="item.thumb" alt="Cover">
-            </a>
-          </template>
-
-          <template v-slot:item.actions="{ item }">
-              <v-btn icon @click="addToPlayer(item)">
-                <v-icon
-                    color="primary">
-                  mdi-play-circle
-                </v-icon>
-              </v-btn>
-          </template>
-
-          <template v-slot:item.artists="{ item }">
-            <span>
-              <a
-                  v-for="(artist, index) in item.artists"
-                  :key="artist.id"
-                  :href="`https://www.discogs.com/artist/${artist.id}`"
-                  target="_blank"
-              >
-                {{ artist.name }}
-                <template v-if="index !== item.artists.length - 1 && item.artists.length > 1"> , </template>
-              </a>
-            </span>
-          </template>
-
-          <template v-slot:item.title="{ item }">
-            <span>
+          >
+            <template v-slot:item.image="{ item }">
               <a
                   :href="item.uri"
                   target="_blank"
               >
-                {{ item.title }}
+                <img :src="item.thumb" alt="Cover">
               </a>
-            </span>
-          </template>
+            </template>
 
-          <template v-slot:item.labels="{ item }">
-            <span>
-              <a
-                  v-for="(label, index) in item.labels"
-                  :key="label.id"
-                  :href="`https://www.discogs.com/label/${label.id}`"
-                  target="_blank"
-              >
-                {{ label.name }}
-                <template v-if="index !== item.labels.length - 1 && item.labels.length > 1"> , </template>
-              </a>
-            </span>
-          </template>
+            <template v-slot:item.actions="{ item }">
+                <v-btn icon @click="addToPlayer(item)">
+                  <v-icon
+                      color="primary">
+                    mdi-play-circle
+                  </v-icon>
+                </v-btn>
+            </template>
 
-          <template v-slot:item.formats="{ item }">
-            <span>
-              <template v-for="(format, index) in item.formats" :key="index">
-                {{ format.name }},
-                <template v-if="format.descriptions && format.descriptions.length">
-                  {{ format.descriptions.join(', ') }}
+            <template v-slot:item.artists="{ item }">
+              <span>
+                <a
+                    v-for="(artist, index) in item.artists"
+                    :key="artist.id"
+                    :href="`https://www.discogs.com/artist/${artist.id}`"
+                    target="_blank"
+                >
+                  {{ artist.name }}
+                  <template v-if="index !== item.artists.length - 1 && item.artists.length > 1"> , </template>
+                </a>
+              </span>
+            </template>
+
+            <template v-slot:item.title="{ item }">
+              <span>
+                <a
+                    :href="item.uri"
+                    target="_blank"
+                >
+                  {{ item.title }}
+                </a>
+              </span>
+            </template>
+
+            <template v-slot:item.labels="{ item }">
+              <span>
+                <a
+                    v-for="(label, index) in item.labels"
+                    :key="label.id"
+                    :href="`https://www.discogs.com/label/${label.id}`"
+                    target="_blank"
+                >
+                  {{ label.name }}
+                  <template v-if="index !== item.labels.length - 1 && item.labels.length > 1"> , </template>
+                </a>
+              </span>
+            </template>
+
+            <template v-slot:item.formats="{ item }">
+              <span>
+                <template v-for="(format, index) in item.formats" :key="index">
+                  {{ format.name }},
+                  <template v-if="format.descriptions && format.descriptions.length">
+                    {{ format.descriptions.join(', ') }}
+                  </template>
+                  <template v-if="index !== item.formats.length - 1"> , </template>
                 </template>
-                <template v-if="index !== item.formats.length - 1"> , </template>
-              </template>
-            </span>
-          </template>
+              </span>
+            </template>
 
-          <template v-slot:item.genres="{ item }">
-            <span>
-              {{ item.genres.join(', ') }}
-            </span>
-          </template>
+            <template v-slot:item.genres="{ item }">
+              <span>
+                {{ item.genres.join(', ') }}
+              </span>
+            </template>
 
-          <template v-slot:item.styles="{ item }">
-            <span>
-              {{ item.styles.join(', ') }}
-            </span>
-          </template>
-        </v-data-table>
+            <template v-slot:item.styles="{ item }">
+              <span>
+                {{ item.styles.join(', ') }}
+              </span>
+            </template>
+          </v-data-table>
         </v-col>
 
         <v-col cols="4">
@@ -124,27 +124,29 @@
 
             <!-- Release Info Section -->
             <v-row>
-              <v-col cols="4">
-                <v-img :src="currentRelease?.thumb" alt="Cover" max-width="60"></v-img>
+              <v-col cols="2">
+                <v-img
+                    :src="currentRelease?.thumb"
+                    alt="Cover"
+                    max-width="60">
+                </v-img>
               </v-col>
-              <v-col cols="8">
-                <div>
-                  <strong>Artists:</strong> {{ currentRelease?.artists?.map(artist => artist.name)?.join(', ') }}
-                </div>
-                <div>
-                  <strong>Title:</strong> {{ currentRelease?.title }}
-                </div>
-                <div>
-                  <strong>Label:</strong> {{ currentRelease?.labels?.map(label => label.name)?.join(', ') }} -
-                  <strong>Released:</strong> {{ currentRelease?.released }}
-                </div>
-                <div>
-                  <strong>Genres:</strong> {{ currentRelease?.genres?.join(', ') }}
-                </div>
-                <div>
-                  <strong>Styles:</strong> {{ currentRelease?.styles?.join(', ') }}
-                </div>
+              <v-col cols="10" class="d-flex flex-column">
+                <span class="align-self-start">{{ currentRelease?.artists?.map(artist => artist.name)?.join(', ') }}</span>
+                <strong class="align-self-start">
+                  <span >{{ currentRelease?.title }}</span>
+                </strong>
               </v-col>
+
+              <v-col class="d-flex flex-column pt-0">
+                <small class="align-self-start">
+                  <strong>{{ currentRelease?.labels?.map(label => label.name)?.join(', ') }}</strong> - {{ currentRelease?.released }}
+                </small>
+                <small class="align-self-start">
+                  {{ currentRelease?.genres?.join(', ') }} > {{ currentRelease?.styles?.join(', ') }}
+                </small>
+              </v-col>
+              <v-divider />
             </v-row>
 
             <!-- YouTube Player -->
