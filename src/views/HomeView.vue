@@ -147,34 +147,31 @@
               </v-col>
             </v-row>
 
+            <!-- YouTube Player -->
+            <v-row class="mt-4">
+              <v-col>
+                <iframe
+                    v-if="currentVideoUrl"
+                    :src="currentVideoUrl"
+                    width="100%"
+                    height="218"
+                ></iframe>
+              </v-col>
+            </v-row>
+
             <!-- Playlist Section -->
             <v-row class="mt-4">
               <v-col>
                 <v-list>
                   <v-list-item
-                      v-for="(track, index) in currentRelease.videos"
+                      v-for="(track, index) in currentRelease?.videos"
                       :key="index"
-                      @click="playVideo(track.url)">
-                      {{ track.title }}
+                      @click="playVideo(track?.uri)">
+                      {{ track?.title }}
                   </v-list-item>
                 </v-list>
               </v-col>
             </v-row>
-
-<!--            &lt;!&ndash; YouTube Player at the bottom &ndash;&gt;-->
-<!--            <v-row class="mt-4">-->
-<!--              <v-col>-->
-<!--                <iframe-->
-<!--                    v-if="currentVideoUrl"-->
-<!--                    :src="currentVideoUrl"-->
-<!--                    width="100%"-->
-<!--                    height="315"-->
-<!--                    frameborder="0"-->
-<!--                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"-->
-<!--                    allowfullscreen-->
-<!--                ></iframe>-->
-<!--              </v-col>-->
-<!--            </v-row>-->
           </v-card>
         </v-col>
       </v-row>
@@ -219,12 +216,12 @@ function filterByFields(value, query, item) {
 }
 
 // Media player
-
 // Array to store all added releases
 const playerReleases = ref([]);
 
 const currentReleaseIndex = ref(0);
 const currentRelease = ref(playerReleases.value[currentReleaseIndex.value] || {});
+const currentVideoUrl = ref(null);
 
 // Function to add a release to the player
 function addToPlayer(item) {
@@ -255,5 +252,11 @@ function nextRelease() {
 // Show all releases (this could be expanded with a modal or a dropdown)
 function showAllReleases() {
   console.log('All added releases:', playerReleases.value);
+}
+
+// Function to play selected YouTube track
+function playVideo(url) {
+  const videoId = new URL(url).searchParams.get('v');
+  currentVideoUrl.value = `https://www.youtube.com/embed/${videoId}`;
 }
 </script>
