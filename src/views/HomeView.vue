@@ -170,7 +170,9 @@
                   <v-list-item
                       v-for="(track, index) in currentRelease?.videos"
                       :key="index"
-                      @click="playVideo(track?.uri)">
+                      :class="{ highlight: isCurrentVideo(track?.uri) }"
+                      @click="playVideo(track?.uri)"
+                      >
                       <small>{{ track?.title }}</small>
                   </v-list-item>
                 </v-list>
@@ -227,6 +229,7 @@ const playerReleases = ref([]);
 const currentReleaseIndex = ref(0);
 const currentRelease = ref(playerReleases.value[currentReleaseIndex.value] || {});
 const currentVideoUrl = ref(null);
+const currentVideoId = ref(null);
 
 // Function to add a release to the player
 function addToPlayer(item) {
@@ -262,7 +265,20 @@ function showAllReleases() {
 
 // Function to play selected YouTube track
 function playVideo(url) {
-  const videoId = new URL(url).searchParams.get('v');
-  currentVideoUrl.value = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+  currentVideoId.value = new URL(url).searchParams.get('v');
+  currentVideoUrl.value = `https://www.youtube.com/embed/${currentVideoId.value}?autoplay=1`;
 }
+
+// Function to check if the current track is the one playing
+const isCurrentVideo = (trackUri) => {
+  const trackId = trackUri.split('v=')[1];
+  return trackId === currentVideoId.value;
+};
 </script>
+
+<style scoped>
+.highlight {
+  background-color: #e0f7fa;
+  font-weight: bold;
+}
+</style>
