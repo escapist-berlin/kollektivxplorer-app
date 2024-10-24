@@ -14,87 +14,169 @@
         ></v-text-field>
       </template>
 
-      <v-data-table
-          :custom-filter="filterByFields"
-          :headers="headers"
-          :items="KollektivXReleases"
-          :search="search"
-          height="750"
-          width="auto"
-          item-value="name"
-      >
-        <template v-slot:item.image="{ item }">
-          <a
-              :href="item.uri"
-              target="_blank"
-          >
-            <img :src="item.thumb" alt="Cover">
-          </a>
-        </template>
-
-        <template v-slot:item.artists="{ item }">
-          <span>
-            <a
-                v-for="(artist, index) in item.artists"
-                :key="artist.id"
-                :href="`https://www.discogs.com/artist/${artist.id}`"
-                target="_blank"
-            >
-              {{ artist.name }}
-              <template v-if="index !== item.artists.length - 1 && item.artists.length > 1"> , </template>
-            </a>
-          </span>
-        </template>
-
-        <template v-slot:item.title="{ item }">
-          <span>
+      <v-row>
+        <v-col cols="8">
+          <v-data-table
+            :custom-filter="filterByFields"
+            :headers="headers"
+            :items="KollektivXReleases"
+            :search="search"
+            height="750"
+            width="auto"
+            item-value="name"
+        >
+          <template v-slot:item.image="{ item }">
             <a
                 :href="item.uri"
                 target="_blank"
             >
-              {{ item.title }}
+              <img :src="item.thumb" alt="Cover">
             </a>
-          </span>
-        </template>
+          </template>
 
-        <template v-slot:item.labels="{ item }">
-          <span>
-            <a
-                v-for="(label, index) in item.labels"
-                :key="label.id"
-                :href="`https://www.discogs.com/label/${label.id}`"
-                target="_blank"
-            >
-              {{ label.name }}
-              <template v-if="index !== item.labels.length - 1 && item.labels.length > 1"> , </template>
-            </a>
-          </span>
-        </template>
+          <template v-slot:item.actions="{ item }">
+              <v-btn icon @click="addToPlayer(item)">
+                <v-icon
+                    color="primary">
+                  mdi-play-circle
+                </v-icon>
+              </v-btn>
+          </template>
 
-        <template v-slot:item.formats="{ item }">
-          <span>
-            <template v-for="(format, index) in item.formats" :key="index">
-              {{ format.name }},
-              <template v-if="format.descriptions && format.descriptions.length">
-                {{ format.descriptions.join(', ') }}
+          <template v-slot:item.artists="{ item }">
+            <span>
+              <a
+                  v-for="(artist, index) in item.artists"
+                  :key="artist.id"
+                  :href="`https://www.discogs.com/artist/${artist.id}`"
+                  target="_blank"
+              >
+                {{ artist.name }}
+                <template v-if="index !== item.artists.length - 1 && item.artists.length > 1"> , </template>
+              </a>
+            </span>
+          </template>
+
+          <template v-slot:item.title="{ item }">
+            <span>
+              <a
+                  :href="item.uri"
+                  target="_blank"
+              >
+                {{ item.title }}
+              </a>
+            </span>
+          </template>
+
+          <template v-slot:item.labels="{ item }">
+            <span>
+              <a
+                  v-for="(label, index) in item.labels"
+                  :key="label.id"
+                  :href="`https://www.discogs.com/label/${label.id}`"
+                  target="_blank"
+              >
+                {{ label.name }}
+                <template v-if="index !== item.labels.length - 1 && item.labels.length > 1"> , </template>
+              </a>
+            </span>
+          </template>
+
+          <template v-slot:item.formats="{ item }">
+            <span>
+              <template v-for="(format, index) in item.formats" :key="index">
+                {{ format.name }},
+                <template v-if="format.descriptions && format.descriptions.length">
+                  {{ format.descriptions.join(', ') }}
+                </template>
+                <template v-if="index !== item.formats.length - 1"> , </template>
               </template>
-              <template v-if="index !== item.formats.length - 1"> , </template>
-            </template>
-          </span>
-        </template>
+            </span>
+          </template>
 
-        <template v-slot:item.genres="{ item }">
-          <span>
-            {{ item.genres.join(', ') }}
-          </span>
-        </template>
+          <template v-slot:item.genres="{ item }">
+            <span>
+              {{ item.genres.join(', ') }}
+            </span>
+          </template>
 
-        <template v-slot:item.styles="{ item }">
-          <span>
-            {{ item.styles.join(', ') }}
-          </span>
-        </template>
-      </v-data-table>
+          <template v-slot:item.styles="{ item }">
+            <span>
+              {{ item.styles.join(', ') }}
+            </span>
+          </template>
+        </v-data-table>
+        </v-col>
+
+        <v-col cols="4">
+          <v-card flat>
+            <!-- Navigation Buttons -->
+            <v-row justify="space-between" class="mb-3">
+              <v-col>
+                <v-btn @click="prevRelease">Back</v-btn>
+                <v-btn @click="nextRelease">Forth</v-btn>
+              </v-col>
+
+              <v-col class="text-right">
+                <v-btn @click="showAllReleases">Show All Releases</v-btn>
+              </v-col>
+            </v-row>
+
+            <!-- Release Info Section -->
+            <v-row>
+              <v-col cols="4">
+                <v-img :src="currentRelease?.thumb" alt="Cover" max-width="60"></v-img>
+              </v-col>
+              <v-col cols="8">
+                <div>
+                  <strong>Artists:</strong> {{ currentRelease?.artists?.map(artist => artist.name)?.join(', ') }}
+                </div>
+                <div>
+                  <strong>Title:</strong> {{ currentRelease?.title }}
+                </div>
+                <div>
+                  <strong>Label:</strong> {{ currentRelease?.labels?.map(label => label.name)?.join(', ') }} -
+                  <strong>Released:</strong> {{ currentRelease?.released }}
+                </div>
+                <div>
+                  <strong>Genres:</strong> {{ currentRelease?.genres?.join(', ') }}
+                </div>
+                <div>
+                  <strong>Styles:</strong> {{ currentRelease?.styles?.join(', ') }}
+                </div>
+              </v-col>
+            </v-row>
+
+<!--            &lt;!&ndash; Playlist Section &ndash;&gt;-->
+<!--            <v-row class="mt-4">-->
+<!--              <v-col>-->
+<!--                <v-list>-->
+<!--                  <v-list-item v-for="(track, index) in currentRelease.youtubeTracks" :key="index" @click="playVideo(track.url)">-->
+<!--                    <v-list-item-content>-->
+<!--                      {{ track.title }}-->
+<!--                    </v-list-item-content>-->
+<!--                  </v-list-item>-->
+<!--                </v-list>-->
+<!--              </v-col>-->
+<!--            </v-row>-->
+
+<!--            &lt;!&ndash; YouTube Player at the bottom &ndash;&gt;-->
+<!--            <v-row class="mt-4">-->
+<!--              <v-col>-->
+<!--                <iframe-->
+<!--                    v-if="currentVideoUrl"-->
+<!--                    :src="currentVideoUrl"-->
+<!--                    width="100%"-->
+<!--                    height="315"-->
+<!--                    frameborder="0"-->
+<!--                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"-->
+<!--                    allowfullscreen-->
+<!--                ></iframe>-->
+<!--              </v-col>-->
+<!--            </v-row>-->
+          </v-card>
+        </v-col>
+      </v-row>
     </v-card>
   </div>
 </template>
@@ -106,6 +188,7 @@ import KollektivXReleases from '/src/assets/KollektivXData.json';
 const search = ref('');
 const headers = ref([
   { title: 'Cover', key: 'image', sortable: false },
+  { title: 'Actions', key: 'actions', sortable: false },
   { title: 'Artists', key: 'artists' },
   { title: 'Title', key: 'title' },
   { title: 'Labels', key: 'labels' },
@@ -114,7 +197,6 @@ const headers = ref([
   { title: 'Released', key: 'released' },
   { title: 'Genres', key: 'genres' },
   { title: 'Styles', key: 'styles' },
-  { title: 'Actions', key: 'actions', sortable: false },
 ]);
 
 function filterByFields(value, query, item) {
@@ -133,5 +215,44 @@ function filterByFields(value, query, item) {
   }
 
   return false;
+}
+
+// Media player
+
+// Array to store all added releases
+const playerReleases = ref([]);
+
+const currentReleaseIndex = ref(0);
+const currentRelease = ref(playerReleases.value[currentReleaseIndex.value] || {});
+
+// Function to add a release to the player
+function addToPlayer(item) {
+  if (!playerReleases.value.includes(item)) {
+    playerReleases.value.push(item);
+
+    if (Object.keys(currentRelease.value).length === 0) {
+      currentRelease.value = playerReleases.value[0];
+    }
+  }
+}
+
+// Functions to navigate between releases
+function prevRelease() {
+  if (currentReleaseIndex.value > 0) {
+    currentReleaseIndex.value--;
+    currentRelease.value = playerReleases.value[currentReleaseIndex.value];
+  }
+}
+
+function nextRelease() {
+  if (currentReleaseIndex.value < playerReleases.value.length - 1) {
+    currentReleaseIndex.value++;
+    currentRelease.value = playerReleases.value[currentReleaseIndex.value];
+  }
+}
+
+// Show all releases (this could be expanded with a modal or a dropdown)
+function showAllReleases() {
+  console.log('All added releases:', playerReleases.value);
 }
 </script>
