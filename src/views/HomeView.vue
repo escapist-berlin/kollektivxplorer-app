@@ -15,7 +15,7 @@
       </template>
 
       <v-row>
-        <v-col cols="8">
+        <v-col :cols="playerReleases.length ? 8 : 12">
           <v-data-table
             :custom-filter="filterByFields"
             :headers="headers"
@@ -112,7 +112,7 @@
           </v-data-table>
         </v-col>
 
-        <v-col cols="4" class="pt-2">
+        <v-col v-if="playerReleases.length" cols="4" class="pt-2">
           <v-card flat>
             <!-- Navigation Buttons -->
             <v-row>
@@ -298,11 +298,6 @@ function nextRelease() {
     currentReleaseIndex.value++;
     currentRelease.value = playerReleases.value[currentReleaseIndex.value];
   }
-}
-
-// Show all releases (this could be expanded with a modal or a dropdown)
-function showAllReleases() {
-  console.log('All added releases:', playerReleases.value);
 }
 
 // Function to play selected YouTube track
