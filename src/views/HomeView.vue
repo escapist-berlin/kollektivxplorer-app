@@ -150,28 +150,31 @@
             </v-row>
 
             <!-- YouTube Player -->
-            <v-row class="mt-4">
+            <v-row>
               <v-col>
                 <iframe
                     v-if="currentVideoUrl"
                     :src="currentVideoUrl"
                     width="100%"
                     height="218"
+                    allow="autoplay"
                 ></iframe>
               </v-col>
+              <v-divider />
             </v-row>
 
             <!-- Playlist Section -->
-            <v-row class="mt-4">
-              <v-col>
-                <v-list>
+            <v-row>
+              <v-col class="pt-0">
+                <v-list lines="one">
                   <v-list-item
                       v-for="(track, index) in currentRelease?.videos"
                       :key="index"
                       @click="playVideo(track?.uri)">
-                      {{ track?.title }}
+                      <small>{{ track?.title }}</small>
                   </v-list-item>
                 </v-list>
+                <v-divider />
               </v-col>
             </v-row>
           </v-card>
@@ -260,6 +263,6 @@ function showAllReleases() {
 // Function to play selected YouTube track
 function playVideo(url) {
   const videoId = new URL(url).searchParams.get('v');
-  currentVideoUrl.value = `https://www.youtube.com/embed/${videoId}`;
+  currentVideoUrl.value = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
 }
 </script>
