@@ -231,6 +231,9 @@
 <script setup>
 import { ref } from 'vue'
 import { fetchReleaseData } from '/src/utils/discogsApi.js';
+import {
+  addReleaseToLocalStorage
+} from '/src/utils/localStorageUtils.js';
 import KollektivXReleases from '/src/assets/KollektivXData.json';
 
 const search = ref('');
@@ -289,9 +292,11 @@ async function addToPlayer(item) {
     }
 
     playerReleases.value.push(item);
+    addReleaseToLocalStorage(item.id);
 
     if (Object.keys(currentRelease.value).length === 0) {
       currentRelease.value = playerReleases.value[0];
+
       this.playVideo(currentRelease.value?.videos[0]?.uri);
     }
   }
