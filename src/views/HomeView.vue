@@ -280,7 +280,7 @@ async function addToPlayer(item) {
     const freshRelease = await fetchReleaseData(item.id);
 
     if (freshRelease) {
-      console.log('freshRelease', freshRelease);
+      // Update the videos array with fresh data
       item.videos = freshRelease.videos;
     }
 
