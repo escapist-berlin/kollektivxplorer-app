@@ -280,8 +280,12 @@ async function addToPlayer(item) {
     const freshRelease = await fetchReleaseData(item.id);
 
     if (freshRelease) {
-      // Update the videos array with fresh data
-      item.videos = freshRelease.videos;
+      // Filter unique videos by `uri` and update item.videos with fresh data
+      const uniqueVideos = freshRelease.videos.filter((video, index, self) =>
+          index === self.findIndex(v => v.uri === video.uri)
+      );
+
+      item.videos = uniqueVideos;
     }
 
     playerReleases.value.push(item);
