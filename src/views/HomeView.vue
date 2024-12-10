@@ -230,6 +230,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { fetchReleaseData } from '/src/utils/discogsApi.js';
 import KollektivXReleases from '/src/assets/KollektivXData.json';
 
 const search = ref('');
@@ -269,13 +270,20 @@ function filterByFields(value, query, item) {
 const playerReleases = ref([]);
 
 const currentReleaseIndex = ref(0);
-const currentRelease = ref(playerReleases.value[currentReleaseIndex.value] || {});
+const currentRelease = ref({});
 const currentVideoUrl = ref(null);
 const currentVideoId = ref(null);
 
 // Function to add a release to the player
-function addToPlayer(item) {
+async function addToPlayer(item) {
   if (!playerReleases.value.includes(item)) {
+    const freshRelease = await fetchReleaseData(item.id);
+
+    if (freshRelease) {
+      console.log('freshRelease', freshRelease);
+      item.videos = freshRelease.videos;
+    }
+
     playerReleases.value.push(item);
 
     if (Object.keys(currentRelease.value).length === 0) {
