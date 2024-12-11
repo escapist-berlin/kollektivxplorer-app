@@ -1,10 +1,12 @@
 # KollektivXplorer
 
-KollektivXplorer is a Single Page Application (SPA) designed for seamless navigation through the KollektivX archive of rare and valuable records.
+[KollektivXplorer](https://kollektivxplorer-app.vercel.app/) is a Single Page Application (SPA) designed for seamless navigation through the KollektivX archive of rare and valuable records.
 
 KollektivX was a platform where music enthusiasts and diggers could collaboratively crowdfund the purchase of rare and expensive records on Discogs. After acquiring these records, the platform digitized them, providing contributors with their digital copies. Over time, KollektivX and its community collected an impressive archive of 2,258 rare records.
 
 KollektivXplorer serves as a dedicated tool to explore this unique archive.
+
+
 
 ---
 
