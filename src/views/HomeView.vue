@@ -24,6 +24,7 @@
             height="750"
             width="auto"
             item-value="name"
+            fixed-header
           >
             <template v-slot:item.played="{ item }">
               <v-checkbox-btn
