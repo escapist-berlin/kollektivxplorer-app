@@ -25,6 +25,7 @@
             width="auto"
             item-value="name"
             fixed-header
+            class="max-height-table"
           >
             <template v-slot:item.played="{ item }">
               <v-checkbox-btn
@@ -381,5 +382,9 @@ const handleCheckboxChange = (item) =>
 .highlight {
   background-color: #e0f7fa;
   font-weight: bold;
+}
+
+.max-height-table {
+  max-height: 78vh;
 }
 </style>
