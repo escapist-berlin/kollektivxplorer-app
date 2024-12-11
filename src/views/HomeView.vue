@@ -28,6 +28,7 @@
             <template v-slot:item.played="{ item }">
               <v-checkbox-btn
                   v-model="item.played"
+                  @change="handleCheckboxChange(item)"
               />
             </template>
 
@@ -238,8 +239,9 @@
 import { computed, ref, onMounted } from 'vue'
 import { fetchReleaseData } from '/src/utils/discogsApi.js';
 import {
+  getStoredReleaseIds,
   addReleaseToLocalStorage,
-  getStoredReleaseIds
+  removeReleaseFromLocalStorage
 } from '/src/utils/localStorageUtils.js';
 import KollektivXReleasesData from '/src/assets/KollektivXData.json';
 
@@ -367,6 +369,11 @@ const KollektivXReleases = computed(() =>
       played: storedIds.value.includes(release.id), // Add `played` based on local storage
     }))
 );
+
+const handleCheckboxChange = (item) =>
+    item.played
+        ? addReleaseToLocalStorage(item.id)
+        : removeReleaseFromLocalStorage(item.id);
 </script>
 
 <style scoped>
