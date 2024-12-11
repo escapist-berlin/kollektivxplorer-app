@@ -25,6 +25,12 @@
             width="auto"
             item-value="name"
           >
+            <template v-slot:item.played="{ item }">
+              <v-checkbox-btn
+                  v-model="item.played"
+              />
+            </template>
+
             <template v-slot:item.image="{ item }">
               <a
                   :href="item.uri"
@@ -229,16 +235,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { fetchReleaseData } from '/src/utils/discogsApi.js';
 import {
-  addReleaseToLocalStorage
+  addReleaseToLocalStorage,
+  getStoredReleaseIds
 } from '/src/utils/localStorageUtils.js';
-import KollektivXReleases from '/src/assets/KollektivXData.json';
+import KollektivXReleasesData from '/src/assets/KollektivXData.json';
 
 const search = ref('');
 const headers = ref([
   { title: 'Cover', key: 'image', sortable: false },
+  { title: 'Played', key: 'played' },
   { title: 'Actions', key: 'actions', sortable: false },
   { title: 'Artists', key: 'artists' },
   { title: 'Title', key: 'title' },
@@ -293,6 +301,7 @@ async function addToPlayer(item) {
 
     playerReleases.value.push(item);
     addReleaseToLocalStorage(item.id);
+    item.played = true;
 
     if (Object.keys(currentRelease.value).length === 0) {
       currentRelease.value = playerReleases.value[0];
@@ -344,6 +353,20 @@ function removeCurrentRelease() {
     }
   }
 }
+
+
+const storedIds = ref([]);
+
+onMounted(() => {
+  storedIds.value = getStoredReleaseIds();
+});
+
+const KollektivXReleases = computed(() =>
+    KollektivXReleasesData.map(release => ({
+      ...release,
+      played: storedIds.value.includes(release.id), // Add `played` based on local storage
+    }))
+);
 </script>
 
 <style scoped>
