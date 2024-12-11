@@ -152,7 +152,7 @@
                 <v-chip
                     size="small"
                     class="align-self-end">
-                    {{ playerReleases.length }} Releases in Player
+                    {{ playerReleases.length }} {{ playerReleases.length === 1 ? 'Release' : 'Releases' }} in Player
                 </v-chip>
               </v-col>
               <v-divider />
